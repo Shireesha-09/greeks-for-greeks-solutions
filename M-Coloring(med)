@@ -1,0 +1,94 @@
+DESCRIPTION:-
+You are given an undirected graph consisting of V vertices and E edges represented by a list edges[][], along with an integer m. Your task is to determine whether it is possible to color the graph using at most m different colors such that no two adjacent vertices share the same color. Return true if the graph can be colored with at most m colors, otherwise return false.
+Note: The graph is indexed with 0-based indexing.
+
+Examples:
+Input: V = 4, edges[][] = [[0, 1], [1, 3], [2, 3], [3, 0], [0, 2]], m = 3
+Output: true
+Explanation: It is possible to color the given graph using 3 colors, for example, one of the possible ways vertices can be colored as follows:
+Vertex 0: Color 1
+Vertex 1: Color 2
+Vertex 2: Color 2
+Vertex 3: Color 3
+Input: V = 3, edges[][] = [[0, 1], [1, 2], [0, 2]], m = 2
+Output: false
+Explanation: It is not possible to color the given graph using only 2 colors because vertices 0, 1, and 2 form a triangle.
+
+Constraints:
+1 ≤ V ≤ 10
+1 ≤ E = edges.size() ≤ (V*(V-1))/2
+0 ≤ edges[i][j] ≤ V-1
+1 ≤ m ≤ V
+
+CODE WITHOUT COMMENTS:-
+class Solution:
+    def graphColoring(self, v, edges, m):
+        # code here
+        graph=[[] for i in range(v)]
+        for u,w in edges:
+            graph[u].append(w)
+            graph[w].append(u)
+        c=[0]*v
+        def issafe(node,col):
+            for nei in graph[node]:
+                if c[nei]==col:
+                    return False
+            return True
+        def solve(node):
+            if node==v:
+                return True
+            for col in range(1,m+1):
+                if issafe(node,col):
+                    c[node]=col
+                    if solve(node+1):
+                        return True
+                    c[node]=0
+            return False
+        return solve(0)
+
+CODE WITH COMMENTS:-
+class Solution:
+    def graphColoring(self, v, edges, m):
+        # Create adjacency list for the graph
+        graph = [[] for _ in range(v)]
+        for u, w in edges:
+            graph[u].append(w)
+            graph[w].append(u)
+        
+        # Array to store color of each vertex (0 means uncolored)
+        c = [0] * v
+        
+        # Function to check if it is safe to color 'node' with 'col'
+        def issafe(node, col):
+            # Check all adjacent vertices
+            for nei in graph[node]:
+                # If any adjacent vertex has the same color, it's not safe
+                if c[nei] == col:
+                    return False
+            return True
+        
+        # Backtracking function to try coloring nodes one by one
+        def solve(node):
+            # If all vertices are colored successfully
+            if node == v:
+                return True
+            
+            # Try all colors from 1 to m
+            for col in range(1, m + 1):
+                # Check if current color can be assigned
+                if issafe(node, col):
+                    # Assign the color
+                    c[node] = col
+                    
+                    # Recur for the next vertex
+                    if solve(node + 1):
+                        return True
+                    
+                    # Backtrack: remove the color
+                    c[node] = 0
+            
+            # If no color can be assigned to this node
+            return False
+        
+        # Start coloring from vertex 0
+        return solve(0)
