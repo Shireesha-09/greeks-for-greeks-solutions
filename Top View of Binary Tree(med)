@@ -1,0 +1,88 @@
+DESCRIPTION:-
+You are given the root of a binary tree, and your task is to return its top view. The top view of a binary tree is the set of nodes visible when the tree is viewed from the top.
+Note:
+Return the nodes from the leftmost node to the rightmost node.
+If multiple nodes overlap at the same horizontal position, only the topmost (closest to the root) node is included in the view. 
+
+Examples:
+Input: root = [1, 2, 3]
+Output: [2, 1, 3]
+Explanation: The Green colored nodes represents the top view in the below Binary tree.
+Input: root = [10, 20, 30, 40, 60, 90, 100]
+Output: [40, 20, 10, 30, 100]
+Explanation: The Green colored nodes represents the top view in the below Binary tree.
+
+Constraints:
+1 ≤ number of nodes ≤ 105
+1 ≤ node->data ≤ 105
+
+
+CODE WITHOUT COMMENTS:-
+from collections import deque
+class Solution:
+    def topView(self, root):
+        if root is None:
+            return []
+
+        q = deque([(root, 0)])
+        d = {}
+
+        while q:
+            node, vertical = q.popleft()
+
+            if vertical not in d:
+                d[vertical] = node.data
+
+            if node.left:
+                q.append((node.left, vertical - 1))
+            if node.right:
+                q.append((node.right, vertical + 1))
+        ans = []
+        for i in sorted(d.keys()):
+            ans.append(d[i])
+
+        return ans
+
+        
+
+CODE WITH COMMENTS:-
+from collections import deque
+
+class Solution:
+    def topView(self, root):
+        # If tree is empty, return empty list
+        if root is None:
+            return []
+
+        # Queue for level-order traversal
+        # Each element stores (node, horizontal distance)
+        q = deque([(root, 0)])
+
+        # Dictionary to store first node at each horizontal distance
+        d = {}
+
+        # Perform BFS
+        while q:
+            node, vertical = q.popleft()
+
+            # If this horizontal distance is seen for the first time,
+            # store the node's data (topmost node)
+            if vertical not in d:
+                d[vertical] = node.data
+
+            # Move to left child with horizontal distance - 1
+            if node.left:
+                q.append((node.left, vertical - 1))
+
+            # Move to right child with horizontal distance + 1
+            if node.right:
+                q.append((node.right, vertical + 1))
+
+        # Collect results from leftmost to rightmost
+        ans = []
+        for i in sorted(d.keys()):
+            ans.append(d[i])
+
+        return ans
+
+
