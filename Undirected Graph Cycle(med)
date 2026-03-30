@@ -1,0 +1,68 @@
+DESCRIPTION:-
+Given an undirected graph with V vertices and E edges, represented as a 2D vector edges[][], where each entry edges[i] = [u, v] denotes an edge between vertices u and v, determine whether the graph contains a cycle or not.
+Note: The graph can have multiple component.
+
+Examples:
+Input: V = 4, E = 4, edges[][] = [[0, 1], [0, 2], [1, 2], [2, 3]]
+Output: true
+Explanation: 
+1 -> 2 -> 0 -> 1 is a cycle.
+Input: V = 4, E = 3, edges[][] = [[0, 1], [1, 2], [2, 3]]
+Output: false
+Explanation: 
+No cycle in the graph.
+
+Constraints:
+1 ≤ V, E ≤ 105
+0 ≤ edges[i][0], edges[i][1] < V
+
+CODE WITHOUT COMMENT:-(BY USING DFS)
+class Solution:
+	def isCycle(self, V, edges):
+		#Code here
+		adj=[[] for _ in range(V)]
+		for u,v in edges:
+		    adj[u].append(v)
+		    adj[v].append(u)
+		visited=[False]*V
+		def dfs(node, parent):
+		    visited[node]=True
+		    for nei in adj[node]:
+		        if not visited[nei]:
+		            if dfs(nei, node):
+		                return True
+		        elif nei !=parent:
+		            return True
+		    return False 
+		for i in range(V):
+		    if not visited[i]:
+		        if dfs(i, -1):
+		            return True
+		return False
+
+CODE WITHOUT COMMENT:-(BY USING BFS)
+class Solution:
+	def isCycle(self, V, edges):
+		#Code here
+		adj=[[] for _ in range(V)]
+		for u,v in edges:
+		    adj[u].append(v)
+		    adj[v].append(u)
+		visited=[False]*V
+		def bfs(start):
+		    q=[(start,-1)]
+		    visited[start]=True
+		    while q:
+		        node,parent=q.pop(0)
+		        for nei in adj[node]:
+		            if not visited[nei]:
+		                visited[nei]=True
+		                q.append((nei,node))
+		            elif nei !=parent:
+		                return True
+		    return False 
+		for i in range(V):
+		    if not visited[i]:
+		        if bfs(i):
+		            return True
+		return False
