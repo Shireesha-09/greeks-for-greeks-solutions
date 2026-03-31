@@ -1,0 +1,50 @@
+DESCRIPTION:-
+Shortest Path in Undirected Graph
+Difficulty: MediumAccuracy: 49.98%Submissions: 182K+Points: 4Average Time: 20m
+You are given an undirected graph with V vertices numbered from 0 to V-1 and E edges, represented as a 2D array edges[][], where each element edges[i] = [u, v] represents an undirected edge between vertices u and v.
+
+Your task is to find the shortest path distance from a given source vertex src to all other vertices in the graph.
+If a vertex is not reachable from the source, return -1 for that vertex.
+
+
+Note: All edges have unit weight (1).
+
+Examples :
+1.
+Input: V = 9, E = 10, 
+edges[][] = [[0, 1], [0, 3], [1, 2], [3, 4], [4, 5], [2, 6], [5, 6], [6, 7], [6, 8], [7, 8]], src = 0
+Output: [0, 1, 2, 1, 2, 3, 3, 4, 4]
+
+2.
+Input: V = 4, E = 2,
+edges[][]= [[0, 3], [1, 3]], src = 3
+Output: [1, 1, -1, 0]
+
+Constraints:
+1 ≤ V ≤ 104
+0 ≤ E ≤ V*(V-1)/2
+0 ≤ edges[i][0], edges[i][1] < V
+
+
+
+CODE WITHOUT COMMENT:-
+class Solution:
+    def shortestPath(self, V, edges, src):
+        adj = [[] for _ in range(V)]
+        for u, v in edges:
+            adj[u].append(v)
+            adj[v].append(u)# only one direction
+        dist = [-1] * V
+        dist[src] = 0
+        queue = [src]
+        front = 0
+        while front < len(queue):
+            node = queue[front]
+            front += 1
+            for nei in adj[node]:
+                if dist[nei] == -1:
+                    dist[nei] = dist[node] + 1
+                    queue.append(nei)
+        
+        return dist   
+            
