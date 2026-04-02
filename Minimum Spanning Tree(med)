@@ -1,0 +1,65 @@
+DESCRIPTION:
+Given a weighted, undirected, and connected graph with V vertices and E edges, your task is to find the sum of the weights of the edges in the Minimum Spanning Tree (MST) of the graph. The graph is provided as a list of edges, where each edge is represented as [u, v, w], indicating an edge between vertex u and vertex v with edge weight w.
+
+Example
+1.
+Input: V = 3, E = 3, Edges = [[0, 1, 5], [1, 2, 3], [0, 2, 1]]
+ 
+Output: 4
+Explanation:
+The Spanning Tree resulting in a weight
+of 4 is shown above.
+
+2.
+Input: V = 2, E = 1, Edges = [[0 1 5]]
+Output: 5 
+Explanation: Only one Spanning Tree is possible which has a weight of 5.
+
+Constraints:
+2 ≤ V ≤ 1000
+V-1 ≤ E ≤ (V*(V-1))/2
+1 ≤ w ≤ 1000
+
+
+
+CODE WITHOUT COMMENT:-
+class Solution:
+    def spanningTree(self, V, edges):
+        # Step 1: Sort edges by weight
+        edges.sort(key=lambda x: x[2])
+        
+        # Disjoint Set (Union-Find)
+        parent = list(range(V))
+        rank = [0] * V
+        
+        def find(x):
+            if parent[x] != x:
+                parent[x] = find(parent[x])  # path compression
+            return parent[x]
+        
+        def union(x, y):
+            rootX = find(x)
+            rootY = find(y)
+            
+            if rootX == rootY:
+                return False
+            
+            # union by rank
+            if rank[rootX] > rank[rootY]:
+                parent[rootY] = rootX
+            elif rank[rootX] < rank[rootY]:
+                parent[rootX] = rootY
+            else:
+                parent[rootY] = rootX
+                rank[rootX] += 1
+            
+            return True
+        
+        # Step 2: Build MST
+        mst_weight = 0
+        
+        for u, v, w in edges:
+            if union(u, v):
+                mst_weight += w
+        
+        return mst_weight
