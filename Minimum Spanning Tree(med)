@@ -22,7 +22,7 @@ V-1 ≤ E ≤ (V*(V-1))/2
 
 
 
-CODE WITHOUT COMMENT:-
+CODE WITHOUT COMMENT:-(1)
 class Solution:
     def spanningTree(self, V, edges):
         adj=[[] for i in range(V)]
@@ -41,4 +41,27 @@ class Solution:
             for nei,w in adj[node]:
                 if not visited[nei]:
                     heapq.heappush(pq,(w,nei))
+        return tw
+
+
+CODE WITHOUT COMMENT:-(2)
+class Solution:
+    def spanningTree(self, V, edges):
+        par=[i for i in range(V)]
+        def find(x):
+            if par[x]!=x:
+                par[x]=find(par[x])
+            return par[x]
+        def union(x,y):
+            r1=find(x)
+            r2=find(y)
+            if r1!=r2:
+                par[r1]=r2
+                return True
+            return False
+        edges.sort(key=lambda x:x[2])
+        tw=0
+        for u,v,w in edges:
+            if union(u,v):
+                tw+=w
         return tw
