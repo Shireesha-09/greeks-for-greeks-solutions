@@ -25,41 +25,20 @@ V-1 ≤ E ≤ (V*(V-1))/2
 CODE WITHOUT COMMENT:-
 class Solution:
     def spanningTree(self, V, edges):
-        # Step 1: Sort edges by weight
-        edges.sort(key=lambda x: x[2])
-        
-        # Disjoint Set (Union-Find)
-        parent = list(range(V))
-        rank = [0] * V
-        
-        def find(x):
-            if parent[x] != x:
-                parent[x] = find(parent[x])  # path compression
-            return parent[x]
-        
-        def union(x, y):
-            rootX = find(x)
-            rootY = find(y)
-            
-            if rootX == rootY:
-                return False
-            
-            # union by rank
-            if rank[rootX] > rank[rootY]:
-                parent[rootY] = rootX
-            elif rank[rootX] < rank[rootY]:
-                parent[rootX] = rootY
-            else:
-                parent[rootY] = rootX
-                rank[rootX] += 1
-            
-            return True
-        
-        # Step 2: Build MST
-        mst_weight = 0
-        
-        for u, v, w in edges:
-            if union(u, v):
-                mst_weight += w
-        
-        return mst_weight
+        adj=[[] for i in range(V)]
+        for u,v,w in edges:
+            adj[u].append((v,w))
+            adj[v].append((u,w))
+        visited=[False]*V
+        pq=[(0,0)]
+        tw=0
+        while pq:
+            wt,node=heapq.heappop(pq)
+            if visited[node]:
+                continue
+            visited[node]=True
+            tw+=wt
+            for nei,w in adj[node]:
+                if not visited[nei]:
+                    heapq.heappush(pq,(w,nei))
+        return tw
